@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Sign In | ISU-Roxas ICT Digital Badge System</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="../assets/css/styles.css">
+</head>
+<body class="login-page">
+  <div class="login-wrapper">
+    <div class="login-brand text-center mb-4">
+      <h1 class="login-title">ISU-Roxas DBS</h1>
+      <p class="login-subtitle">Access the Digital Badge System</p>
+    </div>
+
+    <div class="login-card shadow-sm">
+      <form id="loginForm" class="needs-validation" novalidate>
+        <div id="loginAlert" class="mb-3" role="alert"></div>
+
+        <div class="mb-3">
+          <label for="loginEmail" class="form-label">Email address</label>
+          <input type="email" class="form-control" id="loginEmail" name="email" placeholder="name@example.com" required>
+          <div class="invalid-feedback">Please enter a valid email address.</div>
+        </div>
+
+        <div class="mb-3">
+          <label for="loginPassword" class="form-label">Password</label>
+          <input type="password" class="form-control" id="loginPassword" name="password" minlength="6" required>
+          <div class="invalid-feedback">Password must be at least 6 characters.</div>
+        </div>
+
+        <div class="mb-3">
+          <label for="loginRole" class="form-label">Sign in as</label>
+          <select class="form-select" id="loginRole" name="role" required>
+            <option value="" selected disabled>Select your role</option>
+            <option value="admin">Administrator</option>
+            <option value="instructor">Instructor</option>
+            <option value="student">Student</option>
+          </select>
+          <div class="invalid-feedback">Please choose your role.</div>
+        </div>
+
+        <div class="d-grid gap-2">
+          <button type="submit" class="btn btn-primary">Continue</button>
+        </div>
+        <p class="text-center mt-3 mb-0 small">New here? <a href="register.html" class="link-success fw-semibold">Create an account</a></p>
+      </form>
+    </div>
+
+    <footer class="login-footer text-center mt-4">
+      <small>&copy; <span id="loginYear"></span> ISU-Roxas ICT Department. All rights reserved.</small>
+    </footer>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.1/dist/umd/supabase.min.js"></script>
+  <script>
+    window.SUPABASE_URL = "https://zrjoqppbowbiohhkgexx.supabase.co";
+    window.SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inpyam9xcHBib3diaW9oaGtnZXh4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjE4MTcyNzUsImV4cCI6MjA3NzM5MzI3NX0.NVQGZO4dfBzN-vAB2Jgr4qcvJsWvWSMbZ9Sd8cQ6Cbo";
+  </script>
+  <script src="../assets/js/supabaseClient.js"></script>
+  <script src="../assets/js/common.js"></script>
+  <script src="../assets/js/login.js"></script>
+</body>
+</html>

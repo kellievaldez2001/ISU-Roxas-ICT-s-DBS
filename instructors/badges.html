@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Badges | ISU-Roxas ICT Digital Badge System</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="../assets/css/styles.css">
+</head>
+<body class="instructors-page">
+  <div class="app-shell">
+    <nav class="navbar navbar-expand-lg navbar-dark" data-instructor-navbar></nav>
+    <main class="app-main">
+      <div class="container">
+        <div class="mb-4">
+          <h1 class="display-5 fw-semibold mb-1">Badges</h1>
+          <p class="text-muted mb-0">View badges generated for your courses.</p>
+        </div>
+        <div id="badgesAlert"></div>
+        <div class="card shadow-sm">
+          <div class="card-body">
+            <div class="row g-3 mb-3">
+              <div class="col-md-6">
+                <input type="text" class="form-control" id="searchInput" placeholder="Search by title or description">
+              </div>
+            </div>
+            <div class="table-responsive">
+              <table class="table table-hover mb-0" id="badgesTable">
+                <thead>
+                  <tr>
+                    <th scope="col">Title</th>
+                    <th scope="col">Description</th>
+                    <th scope="col">Image</th>
+                  </tr>
+                </thead>
+                <tbody></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+    <footer>
+      <div class="container text-center">
+        <small>&copy; <span id="currentYear"></span> ISU-Roxas ICT Department</small>
+      </div>
+    </footer>
+  </div>
+
+  <div class="modal fade" id="badgeModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2 class="modal-title h5" id="badgeModalLabel">Add Badge</h2>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <form id="badgeForm">
+          <div class="modal-body">
+            <div class="mb-3">
+              <label for="badgeTitle" class="form-label">Badge Title</label>
+              <input type="text" class="form-control" id="badgeTitle" required>
+            </div>
+            <div class="mb-3">
+              <label for="badgeDescription" class="form-label">Description</label>
+              <textarea class="form-control" id="badgeDescription" rows="3" required></textarea>
+            </div>
+            <div class="mb-3">
+              <label for="badgeImageUrl" class="form-label">Image URL</label>
+              <input type="url" class="form-control" id="badgeImageUrl">
+            </div>
+            <div class="text-center">
+              <img id="badgePreview" class="badge-preview d-none" alt="Badge preview">
+            </div>
+          </div>
+          <div class="modal-footer form-actions">
+            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
+            <button type="submit" class="btn btn-primary">Save</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="badgeImageModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2 class="modal-title h5" id="badgeImageModalLabel">Badge Preview</h2>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body text-center p-4">
+          <img id="badgeImageModalImage" class="img-fluid rounded shadow-sm d-none" alt="Badge preview">
+          <div id="badgeImageModalDesign" class="badge-preview-wrapper d-none" aria-hidden="true">
+            <div class="badge-preview-card">
+              <div class="badge-preview-medal">
+                <div class="badge-preview-medal-inner">
+                  <div class="badge-preview-title" id="badgeImageModalDesignTitle">Badge</div>
+                </div>
+              </div>
+              <div class="badge-preview-ribbon"></div>
+            </div>
+          </div>
+          <p id="badgeImageModalFallback" class="text-muted mb-0">No image uploaded for this badge.</p>
+        </div>
+        <div class="modal-footer justify-content-center align-items-center">
+          <p id="badgeImageModalDescription" class="badge-modal-description mb-0 text-muted"></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.1/dist/umd/supabase.min.js"></script>
+  <script>
+    window.SUPABASE_URL = "https://zrjoqppbowbiohhkgexx.supabase.co";
+    window.SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inpyam9xcHBib3diaW9oaGtnZXh4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjE4MTcyNzUsImV4cCI6MjA3NzM5MzI3NX0.NVQGZO4dfBzN-vAB2Jgr4qcvJsWvWSMbZ9Sd8cQ6Cbo";
+  </script>
+  <script src="../assets/js/supabaseClient.js"></script>
+  <script src="../assets/js/common.js"></script>
+  <script src="../assets/js/instructor-navbar.js"></script>
+  <script src="../assets/js/config.js"></script>
+  <script src="../assets/js/api.js"></script>
+  <script src="../assets/js/badges.js"></script>
+</body>
+</html>
