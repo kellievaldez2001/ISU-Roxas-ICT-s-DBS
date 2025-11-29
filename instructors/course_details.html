@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Course Details | ISU-Roxas ICT Digital Badge System</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="../assets/css/styles.css">
+</head>
+<body>
+  <div class="app-shell">
+    <nav class="navbar navbar-expand-lg navbar-dark" data-instructor-navbar></nav>
+
+    <main class="app-main">
+      <div class="container">
+        <nav aria-label="breadcrumb" class="mb-3 d-none">
+          <ol class="breadcrumb mb-0">
+            <li class="breadcrumb-item active" aria-current="page" id="breadcrumbCourse">Course Details</li>
+          </ol>
+        </nav>
+
+        <div id="courseDetailAlert"></div>
+
+        <div class="d-flex justify-content-start mb-2">
+          <button class="btn btn-outline-secondary btn-sm" id="courseSecondaryAction">Back to catalog</button>
+        </div>
+
+        <section class="course-hero card shadow-sm mb-4" id="courseHero" hidden>
+          <div class="card-body">
+            <div id="courseBadgeWrap" class="mb-2"></div>
+            <div class="d-flex flex-column flex-xl-row gap-4 align-items-start align-items-xl-center">
+              <div class="flex-grow-1 w-100">
+                <div class="d-flex flex-wrap align-items-center gap-2 mb-2" id="courseTitleRow">
+                  <h1 class="h2 mb-0" id="courseTitle">Course Title</h1>
+                </div>
+                <p class="lead mb-3" id="courseSummary">Course summary will appear here.</p>
+                <div class="course-detail-meta" id="courseMeta"></div>
+              </div>
+              <div class="course-hero-actions d-flex flex-column align-items-stretch gap-2">
+                <button class="btn btn-primary" id="coursePrimaryAction">Start Learning</button>
+              </div>
+            </div>
+            <div class="d-flex justify-content-end mt-3">
+              <button type="button" class="btn btn-success btn-sm d-none" id="publishCourseButton">Publish</button>
+            </div>
+          </div>
+        </section>
+
+        <div class="d-flex justify-content-center gap-2 mb-4 d-none" id="courseManageActions">
+          <button class="btn btn-outline-primary btn-sm" data-manage-action="pre-test">Add pre-test</button>
+          <button class="btn btn-outline-primary btn-sm" data-manage-action="module">Add module &amp; lessons</button>
+          <button class="btn btn-outline-primary btn-sm" data-manage-action="post-test">Add post-test</button>
+        </div>
+
+        <div class="row g-4" id="courseContent" hidden>
+          <div class="col-12 col-xl-4">
+            <div class="card shadow-sm h-100">
+              <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                  <div>
+                    <h2 class="h5 mb-0">Course Outline</h2>
+                    <p class="text-muted small mb-0" id="lessonCountCaption"></p>
+                  </div>
+                  <span class="badge bg-success-subtle text-success" id="courseLevelPill"></span>
+                </div>
+                <div class="lesson-outline list-group list-group-flush" id="lessonOutline"></div>
+              </div>
+            </div>
+          </div>
+          <div class="col-12 col-xl-8">
+            <div class="card shadow-sm">
+              <div class="ratio ratio-16x9 course-video" id="lessonVideoWrapper" hidden>
+                <iframe id="lessonVideo" title="Lesson video" allowfullscreen></iframe>
+              </div>
+              <div class="card-body lesson-card-body position-relative">
+                <button class="lesson-nav lesson-nav-prev" type="button" id="prevModuleBtn" aria-label="Previous module" hidden>
+                  <span aria-hidden="true">&lsaquo;</span>
+                </button>
+                <button class="lesson-nav lesson-nav-next" type="button" id="nextModuleBtn" aria-label="Next module" hidden>
+                  <span aria-hidden="true">&rsaquo;</span>
+                </button>
+                <div class="d-flex gap-3 flex-wrap align-items-start justify-content-between">
+                  <div>
+                    <h2 class="h4 mb-1" id="lessonTitle">Select a lesson to begin</h2>
+                    <p class="text-muted small mb-0" id="lessonMeta"></p>
+                  </div>
+                  <button class="btn btn-outline-primary btn-sm" id="downloadResource" hidden>Download Resource</button>
+                </div>
+                <div class="lesson-scroll-progress" id="lessonScrollProgress" hidden>
+                  <div class="progress progress-thin mb-1" role="progressbar" aria-valuemin="0" aria-valuemax="100">
+                    <div class="progress-bar" id="lessonScrollProgressBar" aria-valuenow="0"></div>
+                  </div>
+                  <small class="text-muted" id="lessonScrollProgressCaption">0% completed</small>
+                </div>
+                <div id="lessonContent" class="lesson-content" tabindex="0" aria-live="polite"></div>
+                <div id="lessonQuiz" class="lesson-quiz mt-4" hidden>
+                  <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h3 class="h5 mb-0">Lesson Quiz</h3>
+                    <span class="badge bg-primary-subtle text-primary" id="lessonQuizStatus">Pending</span>
+                  </div>
+                  <div id="lessonQuizResult" class="alert alert-info" role="status" hidden>
+                    Answer the questions below to check your understanding.
+                  </div>
+                  <div id="lessonQuizBody" class="lesson-quiz-body" data-lesson=""></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <footer>
+      <div class="container text-center">
+        <small>&copy; <span id="currentYear"></span> ISU-Roxas ICT Department</small>
+      </div>
+    </footer>
+  </div>
+
+  <div class="modal fade" id="editLessonModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header">
+          <div>
+            <h2 class="modal-title h5 mb-0">Edit Lesson</h2>
+            <p class="small text-muted mb-0" id="editLessonCourseTitle"></p>
+          </div>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <form id="editLessonForm" class="needs-validation" novalidate>
+          <div class="modal-body">
+            <div id="editLessonFormAlert" class="alert d-none" role="alert"></div>
+
+            <div class="mb-3">
+              <label for="editLessonTitle" class="form-label">Lesson title</label>
+              <input type="text" class="form-control" id="editLessonTitle" required>
+              <div class="invalid-feedback">Lesson title is required.</div>
+            </div>
+
+            <div class="mb-3">
+              <label for="editLessonOverview" class="form-label">Lesson overview <span class="text-muted">(optional)</span></label>
+              <textarea id="editLessonOverview" class="form-control" rows="2" placeholder="Add a short overview of this lesson"></textarea>
+            </div>
+
+            <div class="mb-3">
+              <label for="editLessonContent" class="form-label">Lesson content</label>
+              <textarea id="editLessonContent" class="form-control" rows="6" placeholder="Update lesson notes, discussion points, or instructions" required></textarea>
+              <div class="invalid-feedback">Lesson content is required.</div>
+            </div>
+          </div>
+          <div class="modal-footer modal-footer-fixed">
+            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
+            <button type="button" class="btn btn-outline-primary d-none" id="editLessonQuizButton">Edit quiz</button>
+            <button type="submit" class="btn btn-primary" id="editLessonSaveButton">Save changes</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="lessonQuizEditModal" tabindex="-1" aria-hidden="true">
+                  <div class="modal-dialog modal-lg modal-dialog-scrollable">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <div>
+                          <h2 class="modal-title h5 mb-0">Edit Lesson Quiz</h2>
+                          <p class="small text-muted mb-0" id="lessonQuizEditCourseTitle"></p>
+                        </div>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                      </div>
+                      <form id="lessonQuizEditForm" class="needs-validation" novalidate>
+                        <div class="modal-body">
+                          <div id="lessonQuizEditFormAlert" class="alert d-none" role="alert"></div>
+
+                          <div class="mb-3">
+                            <label for="lessonQuizEditItemCount" class="form-label">Number of items</label>
+                            <input type="number" id="lessonQuizEditItemCount" class="form-control" min="0" value="0" required>
+                            <div class="invalid-feedback">Enter how many questions this quiz should have.</div>
+                          </div>
+
+                          <div id="lessonQuizEditQuestions" class="vstack gap-3"></div>
+
+                          <template id="lessonQuizEditQuestionTemplate">
+                            <div class="lesson-quiz-edit-question card border" data-lesson-quiz-question>
+                              <div class="card-body">
+                                <h3 class="h6 mb-3">Question <span data-lesson-quiz-question-number></span></h3>
+                                <div class="mb-3">
+                                  <label class="form-label">Question</label>
+                                  <textarea class="form-control" rows="3" data-field="prompt" required></textarea>
+                                  <div class="invalid-feedback">Enter the question prompt.</div>
+                                </div>
+                                <div class="row g-2 mb-3">
+                                  <div class="col-12 col-md-6">
+                                    <label class="form-label">Option A</label>
+                                    <input type="text" class="form-control" data-field="option" data-option="a" required>
+                                    <div class="invalid-feedback">Please provide option A.</div>
+                                  </div>
+                                  <div class="col-12 col-md-6">
+                                    <label class="form-label">Option B</label>
+                                    <input type="text" class="form-control" data-field="option" data-option="b" required>
+                                    <div class="invalid-feedback">Please provide option B.</div>
+                                  </div>
+                                  <div class="col-12 col-md-6">
+                                    <label class="form-label">Option C</label>
+                                    <input type="text" class="form-control" data-field="option" data-option="c" required>
+                                    <div class="invalid-feedback">Please provide option C.</div>
+                                  </div>
+                                  <div class="col-12 col-md-6">
+                                    <label class="form-label">Option D</label>
+                                    <input type="text" class="form-control" data-field="option" data-option="d" required>
+                                    <div class="invalid-feedback">Please provide option D.</div>
+                                  </div>
+                                </div>
+                                <div class="mb-3">
+                                  <label class="form-label">Correct answer</label>
+                                  <select class="form-select" data-field="answer" required>
+                                    <option value="a">Option A</option>
+                                    <option value="b">Option B</option>
+                                    <option value="c">Option C</option>
+                                    <option value="d">Option D</option>
+                                  </select>
+                                  <div class="invalid-feedback">Choose the correct answer.</div>
+                                </div>
+                                <div>
+                                  <label class="form-label">Explanation <span class="text-muted">(optional)</span></label>
+                                  <textarea class="form-control" data-field="explanation" rows="2" placeholder="Provide additional context for the correct answer"></textarea>
+                                </div>
+                              </div>
+                            </div>
+                          </template>
+                        </div>
+                        <div class="modal-footer modal-footer-fixed">
+                          <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
+                          <button type="submit" class="btn btn-primary" id="lessonQuizEditSaveButton">Save quiz</button>
+                        </div>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+
+                <p class="lead mb-3" id="courseSummary">Course summary will appear here.</p>
+                <div class="course-detail-meta" id="courseMeta"></div>
+              </div>
+              <div class="course-hero-actions d-flex flex-column align-items-stretch gap-2">
+                <button class="btn btn-primary" id="coursePrimaryAction">Start Learning</button>
+              </div>
+            </div>
+            <div class="d-flex justify-content-end mt-3">
+              <button type="button" class="btn btn-success btn-sm d-none" id="publishCourseButton">Publish</button>
+            </div>
+          </div>
+        </section>
+
+        <div class="d-flex justify-content-start mb-2">
+          <button class="btn btn-outline-secondary btn-sm" id="courseSecondaryAction">Back to catalog</button>
+        </div>
+
+        <div class="d-flex justify-content-center gap-2 mb-4 d-none" id="courseManageActions">
+          <button class="btn btn-outline-primary btn-sm" data-manage-action="pre-test">Add pre-test</button>
+          <button class="btn btn-outline-primary btn-sm" data-manage-action="module">Add module &amp; lessons</button>
+          <button class="btn btn-outline-primary btn-sm" data-manage-action="post-test">Add post-test</button>
+        </div>
+
+        <div class="row g-4" id="courseContent" hidden>
+          <div class="col-12 col-xl-4">
+            <div class="card shadow-sm h-100">
+              <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                  <div>
+                    <h2 class="h5 mb-0">Course Outline</h2>
+                    <p class="text-muted small mb-0" id="lessonCountCaption"></p>
+                  </div>
+                  <span class="badge bg-success-subtle text-success" id="courseLevelPill"></span>
+                </div>
+                <div class="lesson-outline list-group list-group-flush" id="lessonOutline"></div>
+              </div>
+            </div>
+          </div>
+          <div class="col-12 col-xl-8">
+            <div class="card shadow-sm">
+              <div class="ratio ratio-16x9 course-video" id="lessonVideoWrapper" hidden>
+                <iframe id="lessonVideo" title="Lesson video" allowfullscreen></iframe>
+              </div>
+              <div class="card-body lesson-card-body position-relative">
+                <button class="lesson-nav lesson-nav-prev" type="button" id="prevModuleBtn" aria-label="Previous module" hidden>
+                  <span aria-hidden="true">&lsaquo;</span>
+                </button>
+                <button class="lesson-nav lesson-nav-next" type="button" id="nextModuleBtn" aria-label="Next module" hidden>
+                  <span aria-hidden="true">&rsaquo;</span>
+                </button>
+                <div class="d-flex gap-3 flex-wrap align-items-start justify-content-between">
+                  <div>
+                    <h2 class="h4 mb-1" id="lessonTitle">Select a lesson to begin</h2>
+                    <p class="text-muted small mb-0" id="lessonMeta"></p>
+                  </div>
+                  <button class="btn btn-outline-primary btn-sm" id="downloadResource" hidden>Download Resource</button>
+                </div>
+                <div class="lesson-scroll-progress" id="lessonScrollProgress" hidden>
+                  <div class="progress progress-thin mb-1" role="progressbar" aria-valuemin="0" aria-valuemax="100">
+                    <div class="progress-bar" id="lessonScrollProgressBar" aria-valuenow="0"></div>
+                  </div>
+                  <small class="text-muted" id="lessonScrollProgressCaption">0% completed</small>
+                </div>
+                <div id="lessonContent" class="lesson-content" tabindex="0" aria-live="polite"></div>
+                <div id="lessonQuiz" class="lesson-quiz mt-4" hidden>
+                  <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h3 class="h5 mb-0">Lesson Quiz</h3>
+                    <span class="badge bg-primary-subtle text-primary" id="lessonQuizStatus">Pending</span>
+                  </div>
+                  <div id="lessonQuizResult" class="alert alert-info" role="status" hidden>
+                    Answer the questions below to check your understanding.
+                  </div>
+                  <div id="lessonQuizBody" class="lesson-quiz-body" data-lesson=""></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <footer>
+      <div class="container text-center">
+        <small>&copy; <span id="currentYear"></span> ISU-Roxas ICT Department</small>
+      </div>
+    </footer>
+  </div>
+
+  <div id="courseManageModals"></div>
+
+  <div class="modal fade" id="preTestModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header">
+          <div>
+            <h2 class="modal-title h5 mb-0">Add Pre-Test</h2>
+            <p class="small text-muted mb-0" id="preTestCourseTitle"></p>
+          </div>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <form id="preTestForm" class="needs-validation" novalidate>
+          <div class="modal-body">
+            <div id="preTestFormAlert" class="alert d-none" role="alert"></div>
+
+            <div class="mb-3">
+              <label for="preTestInstructions" class="form-label">Pre-test instructions</label>
+              <textarea id="preTestInstructions" class="form-control" rows="3" placeholder="Provide guidance for the learners" required></textarea>
+              <div class="invalid-feedback">Please add instructions for the pre-test.</div>
+            </div>
+
+            <div class="row g-3 align-items-end mb-3">
+              <div class="col-12 col-sm-4">
+                <label for="preTestItemCount" class="form-label">Number of items</label>
+                <input type="number" id="preTestItemCount" class="form-control" min="0" value="0" required>
+                <div class="invalid-feedback">Enter how many questions the pre-test should have.</div>
+              </div>
+              <div class="col">
+                <p class="small text-muted mb-0">Question fields update automatically when you change the number above.</p>
+              </div>
+            </div>
+
+            <div id="preTestQuestions" class="vstack gap-3"></div>
+          </div>
+          <div class="modal-footer modal-footer-fixed">
+            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
+            <button type="submit" class="btn btn-primary" id="preTestSaveButton">Save pre-test</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.1/dist/umd/supabase.min.js"></script>
+  <script>
+    window.SUPABASE_URL = window.SUPABASE_URL || "https://zrjoqppbowbiohhkgexx.supabase.co";
+    window.SUPABASE_ANON_KEY = window.SUPABASE_ANON_KEY || "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inpyam9xcHBib3diaW9oaGtnZXh4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjE4MTcyNzUsImV4cCI6MjA3NzM5MzI3NX0.NVQGZO4dfBzN-vAB2Jgr4qcvJsWvWSMbZ9Sd8cQ6Cbo";
+  </script>
+  <script src="../assets/js/supabaseClient.js"></script>
+  <script src="../assets/js/common.js"></script>
+  <script src="../assets/js/instructor-navbar.js"></script>
+  <script src="../assets/js/config.js"></script>
+  <script src="../assets/js/api.js"></script>
+  <script src="../assets/js/course_details.js"></script>
+</body>
+</html>
